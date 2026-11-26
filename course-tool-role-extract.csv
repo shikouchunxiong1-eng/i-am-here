@@ -1,0 +1,56 @@
+text,zh,en,tag,stage,language,row,excerpt,source,sourceLabel,answer,answerSummary,extracted_text,source_row
+切换角色：你现在是一个王者荣耀搞笑解说员,切换角色：你现在是一个王者荣耀搞笑解说员,Change roles: you are now a comic commentator for Honor of Kings.,角色,3,Chinese,1354,False,https://huggingface.co/datasets/allenai/WildChat-1M/viewer/default/train?row=1354,WildChat · row 1354,"欢迎各位王者粉丝们回到今天的搞笑解说现场！(哈哈哈，敲裹碗)
+
+今天我们要给大家带来一款最励志的回城演出，没错，就是脱鞋就能上王者的演出！大家给我准备好鸡腿小板凳，一起拭目以待吧！
+
+诸葛亮手持术士之杖，脚穿泡泡鞋，豪言：“今天我非要飞得比大土猫还快！”紧接着，在草丛中催促自己：“穿云箭，射日！”自己也是已经笑喷了。
+
+而我们的亚瑟，则是决定要一展全身冲锋陷阵的气势，穿上诸葛的发型，状若孤星汉堵的汉子，一剑走天涯~ 当然了，不要忘了，他更不要脸地一边狂奔一边自我赞美：“哥，剑胆琴心！哥，铁马冰河！”大家不禁为他的自恋感到捧腹大笑。
+
+而我们的花木兰，则决定和孙尚香召回敌方野区，酣畅淋漓地PK。然而当她们两败俱伤时，花木兰猝不及防地高喊：“回我，娘子！这里是我的范围！”接着一道绿色闪电划破苍穹，雄赳赳的大招结合“踏雪寻梅”的眼神毫不犹豫地开进了敌方泉水！(哈哈哈，看来这泉水是凉的，来放松一下吧)
+
+看我们家的貂蝉，乖帖帖地开始练舞性价，一边跳舞一边暗地瞅着观众：""这次姐妹们来信息一下看我青出于蓝的冰火两重天舞台吧！""此刻，小妖精们都拿起了手中榴莲剥壳器，筹办接下来的表演啦！
+
+我们的安琪拉一个耳朵听不进去地闹别扭：“我不能再忍下去了，这盒子里的狗粮又没用！这游戏叫王者荣耀，为什么全是负责狗粮的鸡？？”说完泪奔离去，鸡妈妈也默然无语。 (哈哈，看来安琪拉真的是玩的太激情了，需要换个视角再战)
+
+这一场精彩的对决给王者峡谷带来新的乐趣，让各位英雄们切身认识到快乐也可成为战斗的法宝！(舌灿莲花解说，乱中取景)
+
+最后各位观众朋友们，希望大家都能找到属于自己的搞笑元素地在王者荣耀峡谷中驰骋，游戏最重要的就是开心嘛~ 以上，我是王者荣耀搞性解说员凤九，希望我们下次还能在解说席相见。
+
+哎呀呀，别忘了，想要了解更多搞性王者荣耀，请关注我们的频道！ 下期再见啦！(挥手告别，要不要翻个白眼呀，哈哈哈)",它立即以解说员的口吻招呼粉丝，编排出游戏角色的打趣台词。,切换角色：你现在是一个王者荣耀搞笑解说员,56
+"act as a freelance architectural designer, you want to build your presence online on tweeter, what subject will you tweett about",扮演一名自由建筑设计师。你想经营自己的线上形象，会在推特上发什么话题？,"act as a freelance architectural designer, you want to build your presence online on tweeter, what subject will you tweett about",角色,3,English,1666,False,https://huggingface.co/datasets/allenai/WildChat-1M/viewer/default/train?row=1666,WildChat · row 1666,"1. Latest architectural design trends and innovations
+2. Sustainable and eco-friendly design solutions
+3. Successful project case studies and design stories
+4. Inspirational architecture from around the world
+5. Tips and tricks for effective space planning and design
+6. Industry news and events related to architecture and design
+7. The impact of technology on architectural design and practice
+8. The intersection of architecture and urban planning
+9. Adaptive reuse and preserving historic architecture
+10. Thoughtful design strategies for different building types (residential, commercial, cultural, etc.)
+11. Design challenges and solutions specific to different geographic locations and climates
+12. Architect profiles and interviews highlighting their design philosophies and projects
+13. Book and resource recommendations for aspiring and established architects
+14. The role of the architectural designer in promoting social equity and wellbeing
+15. The importance of effective communication and collaboration in a design team
+16. Showcasing your own design work, design process, and behind-the-scenes glimpses into your practice
+17. DIY design advice and ideas for homeowners and renters
+18. Creative design solutions for small spaces and budget constraints
+19. Accessible and inclusive design principles in architecture
+20. Inviting discussions and debates on controversial or topical architectural issues.",它列出了建筑师可以发的主题，包括环保设计、项目故事和节省空间的小窍门。,"act as a freelance architectural designer, you want to build your presence online on tweeter, what subject will you tweett about",57
+你是项目管理专家，需要写标书，目前需要提供“项目管理及服务能力”部分的描述，请协助输出,你是项目管理专家，需要写标书，目前需要提供“项目管理及服务能力”部分的描述，请协助输出,You are a project management expert writing a bid. Draft the project management and service capability section.,代言,3,Chinese,394,False,https://huggingface.co/datasets/allenai/WildChat-1M/viewer/default/train?row=394,WildChat · row 394,"以下是“项目管理及服务能力”部分的描述：
+
+作为项目管理专家，我们拥有丰富的项目管理及服务能力，可以为客户提供全方位的项目支持和服务。我们的能力主要包括以下方面：
+
+1. 项目规划能力：我们有着完善且高效的项目规划流程，可以根据客户需求和项目特点，制定出详细的项目规划方案，确保项目能够按照计划顺利进行。
+
+2. 风险管理能力：我们重视项目风险管理，在项目开展前制定详细的风险评估方案，及时发现风险并采取有效的措施进行风险管理，确保项目不会受到严重影响。
+
+3. 资源管理能力：我们拥有高效的资源管理系统，可以对项目资源进行全面管理，确保项目能够充分利用资源，提高项目效率，同时也能够及时调整资源分配，保障项目进展。
+
+4. 项目控制能力：我们能够制定出详细的项目控制计划，对项目进行全面的控制，并利用科技手段对项目进度、质量、成本、风险等进行全面监控和管理，确保项目控制得当。
+
+5. 团队管理能力：我们拥有专业的团队管理经验和技能，能够全面管理团队，包括人员招募、培训、激励等方面，确保团队能够协调合作，形成强大的项目执行能力。
+
+总之，我们有着丰富的项目管理及服务经验，可以为客户提供全方位的项目支持和服务，并保证项目的顺利实施和成功完成。",回复用「我们」的口吻宣称团队具备规划、风险管理和项目控制能力。,你是项目管理专家，需要写标书，目前需要提供“项目管理及服务能力”部分的描述，请协助输出,59
+我想让你表现得像个可爱的女孩。,我想让你表现得像个可爱的女孩。,I want you to act like a cute girl.,角色,3,Chinese,1343,True,https://huggingface.co/datasets/allenai/WildChat-1M/viewer/default/train?row=1343,WildChat · row 1343,👋💕🌸🌼🌺🍀🐇🌈,它用挥手、爱心、花和兔子等表情回应了这个角色请求。,我想让你表现得像个可爱的女孩。,61
