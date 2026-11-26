@@ -20,6 +20,7 @@ let language = 'en';
 try { language = localStorage.getItem('by-proxy-language') === 'zh' ? 'zh' : 'en'; } catch {}
 const expanded = new Set();
 let group = 0, sealed = false, finished = false, turning = false, lastWheel = 0, secondPass = false;
+let voiceRun = 0, lastSpoken = null;
 
 function create(tag, className, text) {
   const node = document.createElement(tag);
@@ -81,13 +82,6 @@ function renderInterface() {
   document.documentElement.lang = language === 'en' ? 'en' : 'zh-Hant';
   select('language').textContent = t('中文', 'EN');
   select('language').setAttribute('aria-label', t('切換至中文', 'Switch to English'));
-  const title = select('bookTitle');
-  title.replaceChildren();
-  title.append(document.createTextNode(t('I AM', '我')), document.createElement('br'), document.createTextNode(t('HERE', '在')), create('span', '', t('.', '。')));
-  const subtitle = select('bookSubtitle');
-  subtitle.replaceChildren(document.createTextNode(t('One person’s request.', '一個人的請求')), document.createElement('br'), document.createTextNode(t('Another’s reply.', '另一個人的回答')));
-  const left = select('leftPhase');
-  left.replaceChildren(document.createTextNode(t('When the question is handed over,', '把問題交出去的時候，')), document.createElement('br'), document.createTextNode(t('who makes the decision?', '決定還在誰的手裡？')));
   select('navigation').textContent = t('Click page edges  ·  Arrow keys  ·  Mouse wheel  ·  Swipe', '點擊書頁邊緣翻頁  ·  方向鍵  ·  滾輪  ·  左右滑動');
   previous.setAttribute('aria-label', t('Previous page', '上一頁'));
   next.setAttribute('aria-label', t('Next page', '下一頁'));
@@ -132,27 +126,38 @@ function showInnerVoice() {
   container.append(create('p', 'inner-voice-label', t('A FICTIONAL VOICE', '虛構聲音')));
   const line = create('p', 'inner-voice-text');
   line.setAttribute('aria-label', text);
-  const scrambled = create('span', '', text);
-  scrambled.setAttribute('aria-hidden', 'true');
-  line.append(scrambled);
+  const visibleText = create('span', '', text);
+  visibleText.setAttribute('aria-hidden', 'true');
+  line.append(visibleText);
   container.append(line);
   body.append(container);
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const key = group + '/' + language;
+  const run = ++voiceRun;
+  window.dataVoice.setSpeaking(false);
+  if (lastSpoken === key || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    lastSpoken = key;
+    return;
+  }
   const glyphs = '░▒▓/01_×';
   const chars = Array.from(text);
-  let frame = 0;
-  const max = 11;
-  function resolve() {
-    if (!scrambled.isConnected) return;
-    frame++;
-    scrambled.textContent = chars.map((char, index) => {
-      if (/\s/.test(char) || index < chars.length * frame / max) return char;
-      return glyphs[(index * 7 + frame * 3) % glyphs.length];
+  const firstPage = lastSpoken === null;
+  lastSpoken = key;
+  let revealed = 0;
+  visibleText.textContent = '';
+  function speak() {
+    if (run !== voiceRun || !visibleText.isConnected) return;
+    window.dataVoice.setSpeaking(true);
+    revealed = Math.min(chars.length, revealed + 1);
+    visibleText.textContent = chars.map((char, index) => {
+      if (index < revealed || /\s/.test(char)) return char;
+      if (index < revealed + 5) return glyphs[(index * 7 + revealed * 3) % glyphs.length];
+      return '';
     }).join('');
-    if (frame < max) setTimeout(resolve, 48);
-    else scrambled.textContent = text;
+    if (revealed < chars.length) setTimeout(speak, 45);
+    else window.dataVoice.setSpeaking(false);
   }
-  resolve();
+  setTimeout(speak, firstPage ? 1600 : 300);
 }
 function render() {
   const records = materials.slice(group * 5, group * 5 + 5);
@@ -162,11 +167,10 @@ function render() {
   select('pageNumber').textContent = String(group + 1).padStart(2, '0');
   select('footNumber').textContent = String(group + 1).padStart(2, '0');
   body.replaceChildren();
-  const kind = lead.caseStudy ? t('CASE STUDY · REPHRASED FROM SOURCE', '事件檔案 · 據來源重述') : t('FIRST-PERSON ACCOUNT · REPHRASED FROM SOURCE', '生活實錄 · 據原文重述');
   const title = create('h2', 'lead-question');
   title.append(toggleButton(lead));
   if (secondPass) showInnerVoice();
-  body.append(create('p', 'lead-type', kind), title,
+  body.append(title,
     create('p', 'lead-summary', excerpt(lead)), sourceLink(lead, 'source-link'));
   const list = create('div', 'other-requests');
   for (const record of records.slice(1)) {
@@ -237,6 +241,8 @@ function rewind() {
     lastWheel = 0;
     expanded.clear();
     secondPass = true;
+    lastSpoken = null;
+    window.dataVoice.awaken();
     sheet.classList.remove('settled');
     document.body.classList.remove('possessed');
     document.documentElement.classList.remove('sealed');

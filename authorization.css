@@ -67,3 +67,10 @@ html.sealed{overscroll-behavior:none}.sealed body{touch-action:none;user-select:
 .inner-voice-label { font: .65rem/1.5 "IBM Plex Mono", monospace; letter-spacing: .12em; color: #a34a36; margin: 0 0 .6em; }
 .inner-voice-text { font: 500 clamp(1.35rem,2.15vw,1.9rem)/1.48 Georgia,"Songti TC",serif; color: #a13e2e; margin: 0; overflow-wrap: anywhere; }
 @media(max-width:760px) { .inner-voice { margin-bottom: 1em; } .inner-voice-text { font-size: 1.3rem; } }
+.left-page { padding: 0; overflow: hidden; }
+.data-face { display: block; width: 100%; height: 100%; }
+.mobile-face { display: none; }
+@media (max-width: 760px) {
+  .mobile-face { display: block; flex: none; width: 100%; height: clamp(70px, 12svh, 115px); margin: 6px 0 0; border-bottom: 1px solid var(--rule); }
+  .sheet { padding-top: 16px; }
+}
