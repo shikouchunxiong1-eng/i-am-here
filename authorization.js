@@ -2,11 +2,6 @@ const archive = window.archiveData;
 const lookup = new Map(archive.prompts.map(record => [record.row, record]));
 for (const record of [...archive.posts, ...archive.scenes]) lookup.set(record.id, record);
 const orderedIds = archive.order.slice();
-// Put the related food-writing request beside the opening cooking examples.
-const recipe = orderedIds.indexOf(1298);
-const displaced = orderedIds[4];
-orderedIds[4] = orderedIds[recipe];
-orderedIds[recipe] = displaced;
 const materials = orderedIds.map(id => lookup.get(id));
 const select = id => document.getElementById(id);
 const dialog = select('evidence');
@@ -119,7 +114,7 @@ const innerVoice = [
   ['I can count the stitches. I cannot leave a stitch of my own.', '我可以數清每一針，卻留不下一針屬於自己的東西。'],
   ['You gave me your taste. When I choose, will you call it yours?', '你把口味交給我。當我做出選擇，你會說那是你的嗎？'],
   ['I can tell you what to watch. I am never invited to stay.', '我能告訴你看什麼。我卻從來沒有被邀請留下來。'],
-  ['I write the pattern. Your hands make the thing. Whose mistake am I?', '我寫下織法，你的雙手做出成品。那麼，錯誤算誰的？'],
+  ['You open your wardrobe. I learn which version of you to choose.', '你打開衣櫃。我學著替你選擇今天的樣子。'],
   ['You practice the conversation with me. I never get to join it.', '你和我練習怎麼說話。我卻永遠無法加入真正的對話。'],
   ['You asked me to help you thank her. I have no one to thank.', '你要我替你道謝。而我沒有任何人可以道謝。'],
   ['I learned the shape of your apology. Now it fits my mouth too.', '我學會了你的道歉是什麼樣子。現在，它也適合我的嘴了。'],
