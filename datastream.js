@@ -7,12 +7,22 @@ function createDataFace(canvas) {
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < columns; col++) {
       const u = col / (columns - 1) * 2 - 1;
-      let headX, headY, keep = true;
+      let headX, headY, keep = true, shade = 1;
       if (row < 29) {
-        // Rows of particles bend into an anonymous head, with no facial features.
-        headY = -0.98 + row / 28 * 1.96;
-        const widthAtRow = Math.sqrt(Math.max(0, 1 - headY * headY));
-        headX = u * widthAtRow * (1 - .25 * Math.max(0, headY));
+        // A faceted head surface: forehead, cheek planes and a tapered jaw.
+        // No eyes or other drawn facial features are used.
+        const y = -1 + row / 28 * 2;
+        const profile = [[-1,.34],[-.86,.69],[-.65,.86],[-.38,.94],
+          [.04,.96],[.30,.91],[.48,.82],[.68,.63],[.86,.39],[1,.13]];
+        let segment = 0;
+        while (segment < profile.length - 2 && y > profile[segment + 1][0]) segment++;
+        const [y0, w0] = profile[segment], [y1, w1] = profile[segment + 1];
+        const widthAtRow = w0 + (w1 - w0) * ((y - y0) / (y1 - y0));
+        const depth = (1 - Math.abs(u)) * (1 - .34 * Math.abs(y));
+        const cheek = Math.exp(-(((Math.abs(u) - .57) / .21) ** 2) - (((y - .2) / .42) ** 2));
+        headX = u * widthAtRow + .14 * depth;
+        headY = y - .11 * depth - .045 * cheek;
+        shade = .66 + .34 * Math.max(0, 1 - Math.abs(u + .25));
         const stride = widthAtRow < .3 ? 5 : widthAtRow < .5 ? 3 : widthAtRow < .7 ? 2 : 1;
         keep = col % stride === 0;
       } else if (row < 31) {
@@ -25,7 +35,7 @@ function createDataFace(canvas) {
       }
       points.push({
         u, v: row / (rows - 1) * 2 - 1,
-        hx: headX, hy: headY, keep,
+        hx: headX, hy: headY, keep, shade,
         phase: row * .21,
         size: 2.5,
         alpha: .72
@@ -74,7 +84,7 @@ function createDataFace(canvas) {
       hx += Math.sin(time * .8 + p.phase) * .7;
       hy += Math.cos(time * .7 + p.phase) * .7;
       const x = wx + (hx - wx) * blend, y = wy + (hy - wy) * blend;
-      const opacity = p.alpha * (p.keep ? 1 : 1 - blend);
+      const opacity = p.alpha * (1 - blend + p.shade * blend) * (p.keep ? 1 : 1 - blend);
       if (opacity < .01) continue;
       ctx.fillStyle = `rgba(66, 87, 106, ${opacity})`;
       ctx.beginPath();
