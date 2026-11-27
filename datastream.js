@@ -2,42 +2,33 @@
 function createDataFace(canvas) {
   const ctx = canvas.getContext('2d');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const colors = ['84, 102, 192', '104, 91, 172', '142, 83, 149', '183, 82, 92', '200, 130, 75'];
-  const columns = 70, rows = 52;
+  const columns = 46, rows = 34;
   const points = [];
-  const fract = value => value - Math.floor(value);
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < columns; col++) {
-      const i = row * columns + col;
-      const random = fract(Math.sin(i * 12.9898 + 78.233) * 43758.5453);
-      const random2 = fract(Math.sin(i * 43.713 + 4.321) * 23758.5453);
-      const angle = i * 2.3999632297;
-      const radius = Math.sqrt((i + .5) / (columns * rows));
-      // The outline is made of particles, without drawing anatomical features.
-      const rim = i % 5 === 0;
-      const r = rim ? .96 + random * .04 : radius * .96;
-      const faceY = Math.sin(angle) * r;
-      const taper = 1 - .28 * Math.max(0, faceY);
-      let headX = Math.cos(angle) * r * taper, headY = faceY;
-      // A small scatter around the neck and shoulders makes the silhouette human.
-      if (i % 9 === 0) {
-        if (random < .45) {
-          headX = (random2 < .5 ? -1 : 1) * (.31 + random * .10);
-          headY = .82 + (random2 * 2 % 1) * .45;
-        } else {
-          headX = (random2 * 2 - 1) * 1.22;
-          headY = 1.15 + Math.abs(headX) * .22 + (random - .5) * .10;
-        }
+      const u = col / (columns - 1) * 2 - 1;
+      let headX, headY, keep = true;
+      if (row < 29) {
+        // Rows of particles bend into an anonymous head, with no facial features.
+        headY = -0.98 + row / 28 * 1.96;
+        const widthAtRow = Math.sqrt(Math.max(0, 1 - headY * headY));
+        headX = u * widthAtRow * (1 - .25 * Math.max(0, headY));
+        const stride = widthAtRow < .3 ? 5 : widthAtRow < .5 ? 3 : widthAtRow < .7 ? 2 : 1;
+        keep = col % stride === 0;
+      } else if (row < 31) {
+        headY = 1.04 + (row - 29) * .12;
+        headX = u * .29;
+        keep = col % 3 === 0;
+      } else {
+        headY = 1.24 + (row - 31) * .12 + Math.abs(u) * .15;
+        headX = u * (0.57 + (row - 31) * .3);
       }
       points.push({
-        u: (col + random * .7) / (columns - 1),
-        v: (row + random2 * .65) / (rows - 1),
-        hx: headX,
-        hy: headY,
-        phase: random * Math.PI * 2,
-        size: .65 + random2 * 1.15,
-        alpha: .42 + random * .45,
-        color: colors[Math.min(colors.length - 1, Math.floor((col / columns * .7 + random * .3) * colors.length))]
+        u, v: row / (rows - 1) * 2 - 1,
+        hx: headX, hy: headY, keep,
+        phase: row * .21,
+        size: 2.5,
+        alpha: .72
       });
     }
   }
@@ -68,11 +59,10 @@ function createDataFace(canvas) {
     const cx = width * .5, cy = height * .48;
     for (const p of points) {
       // Layered travelling waves create the impression of a flowing particle surface.
-      const u = p.u * 2 - 1, v = p.v;
-      const wave = Math.sin(u * 5.2 + v * 7.5 - time * 1.1) * .035
-        + Math.sin(u * 9 - v * 5 + time * .72) * .018;
-      const wx = width * (.5 + u * (.43 + .055 * v) + Math.sin(v * 9 - time * .7 + p.phase) * .008);
-      const wy = height * (.08 + v * .82 + wave);
+      const u = p.u, v = p.v;
+      const wave = Math.sin(u * 3.3 + v * .45 - time * .8) * .075;
+      const wx = width * (.5 + u * .39);
+      const wy = height * (.49 + v * .30 + wave);
       let hx = cx + p.hx * headWidth * .5;
       let hy = cy + p.hy * headHeight * .5;
       // A soft movement in the lower cloud follows the typed voice, without a drawn mouth.
@@ -81,12 +71,15 @@ function createDataFace(canvas) {
         hy += Math.sin(time * 9 + p.phase * .22) * height * .009 * voice;
         hx += Math.sin(time * 7) * width * .003 * voice;
       }
-      hx += Math.sin(time * .9 + p.phase) * 1.5;
-      hy += Math.cos(time * .8 + p.phase) * 1.5;
+      hx += Math.sin(time * .8 + p.phase) * .7;
+      hy += Math.cos(time * .7 + p.phase) * .7;
       const x = wx + (hx - wx) * blend, y = wy + (hy - wy) * blend;
-      ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
-      const length = p.size * (1.2 + (1 - blend) * .7);
-      ctx.fillRect(x - length / 2, y - p.size * .34, length, Math.max(.7, p.size * .68));
+      const opacity = p.alpha * (p.keep ? 1 : 1 - blend);
+      if (opacity < .01) continue;
+      ctx.fillStyle = `rgba(66, 87, 106, ${opacity})`;
+      ctx.beginPath();
+      ctx.arc(x, y, p.size / 2, 0, Math.PI * 2);
+      ctx.fill();
     }
     if (!reduced.matches || blend !== desired) frame = requestAnimationFrame(draw);
   }
