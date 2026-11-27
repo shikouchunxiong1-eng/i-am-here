@@ -74,3 +74,10 @@ html.sealed{overscroll-behavior:none}.sealed body{touch-action:none;user-select:
   .mobile-face { display: block; flex: none; width: 100%; height: clamp(70px, 12svh, 115px); margin: 6px 0 0; border-bottom: 1px solid var(--rule); }
   .sheet { padding-top: 16px; }
 }
+
+/* The title opens the source; the ellipsis expands the answer. */
+.question-title { color: inherit; }
+a.question-title { text-decoration: underline; text-decoration-color: #b45a42; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a.question-title:hover { color: var(--rust); }
+.reply-toggle { display: inline; padding: 0 .12em; border: 0; background: transparent; color: var(--rust); cursor: pointer; font-family: inherit; font-size: 1.12em; font-weight: 600; line-height: 1; vertical-align: baseline; }
+.reply-toggle:hover { text-decoration: underline; text-underline-offset: .15em; }

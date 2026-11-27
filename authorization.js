@@ -29,23 +29,46 @@ function create(tag, className, text) {
   return node;
 }
 function hasSource(record) {
-  return record.source && record.row == null && !record.readOnly && !record.fiction;
+  return Boolean(record.source && !record.readOnly && !record.fiction);
 }
 function recordKey(record) {
   return record.row != null ? 'row-' + record.row : record.id;
 }
-function toggleButton(record) {
-  const button = create('button', 'question-toggle', language === 'en' ? record.en : record.zh);
+function questionTitle(record) {
+  const title = create(hasSource(record) ? 'a' : 'span', 'question-title', language === 'en' ? record.en : record.zh);
+  if (hasSource(record)) {
+    title.href = record.source;
+    title.target = '_blank';
+    title.rel = 'noopener noreferrer';
+  }
+  return title;
+}
+function answerView(record, className) {
+  const text = fullReply(record).trim();
+  const isExpanded = expanded.has(recordKey(record));
+  const chars = Array.from(text.replace(/\s+/g, ' '));
+  const limit = language === 'en' ? 190 : 115;
+  const preview = chars.length > limit ? chars.slice(0, limit).join('').trimEnd() : text;
+  const answer = create('p', className);
+  answer.append(document.createTextNode(isExpanded ? text : preview));
+  const button = create('button', 'reply-toggle', isExpanded ? '−' : '…');
   button.type = 'button';
-  button.setAttribute('aria-expanded', String(expanded.has(recordKey(record))));
+  button.dataset.recordKey = recordKey(record);
+  button.setAttribute('aria-expanded', String(isExpanded));
+  const question = language === 'en' ? record.en : record.zh;
+  button.setAttribute('aria-label', (isExpanded ? t('Collapse answer: ', '收起回答：') : t('Expand answer: ', '展開回答：')) + question);
+  button.title = isExpanded ? t('Collapse answer', '收起回答') : t('Expand answer', '展開回答');
   button.onclick = () => {
     const key = recordKey(record);
     if (expanded.has(key)) expanded.delete(key); else expanded.add(key);
     const offset = body.scrollTop;
     render();
     body.scrollTop = offset;
+    const replacement = Array.from(body.querySelectorAll('.reply-toggle')).find(item => item.dataset.recordKey === key);
+    if (replacement) replacement.focus({preventScroll:true});
   };
-  return button;
+  answer.append(document.createTextNode(' '), button);
+  return answer;
 }
 function sourceLink(record, className) {
   const a = create('a', className, t('Open original ↗', '打開原文 ↗'));
@@ -63,13 +86,6 @@ function fullReply(record) {
   }
   if (record.fiction) return language === 'en' ? record.answerSummaryEn : record.answerSummary;
   return language === 'en' ? record.directReplyEn : record.directReply;
-}
-function excerpt(record) {
-  const text = fullReply(record).trim();
-  if (expanded.has(recordKey(record))) return text;
-  const chars = Array.from(text.replace(/\s+/g, ' '));
-  const limit = language === 'en' ? 190 : 115;
-  return chars.length > limit ? chars.slice(0, limit).join('').trimEnd() + '…' : text;
 }
 function section(index) {
   if (index < 5) return [t('01 / CURIOSITY','01 / 好奇'), t('Everyday','日常')];
@@ -168,20 +184,19 @@ function render() {
   select('footNumber').textContent = String(group + 1).padStart(2, '0');
   body.replaceChildren();
   const title = create('h2', 'lead-question');
-  title.append(toggleButton(lead));
+  title.append(questionTitle(lead));
   if (secondPass) showInnerVoice();
-  body.append(title,
-    create('p', 'lead-summary', excerpt(lead)), sourceLink(lead, 'source-link'));
+  body.append(title, answerView(lead, 'lead-summary'));
+  if (hasSource(lead) && lead.row == null) body.append(sourceLink(lead, 'source-link'));
   const list = create('div', 'other-requests');
   for (const record of records.slice(1)) {
     const row = create('div', 'request-row');
     const content = create('p', 'request-text');
-    content.append(toggleButton(record));
+    content.append(questionTitle(record));
     const copy = create('div', 'request-copy');
-    const reply = create('p', 'request-reply');
-    reply.textContent = excerpt(record);
+    const reply = answerView(record, 'request-reply');
     copy.append(content, reply);
-    if (hasSource(record)) copy.append(sourceLink(record, 'row-source'));
+    if (hasSource(record) && record.row == null) copy.append(sourceLink(record, 'row-source'));
     row.append(copy);
     list.append(row);
   }
